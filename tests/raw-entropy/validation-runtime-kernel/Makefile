@@ -1,11 +1,11 @@
 # Compile Noise Source as user space application
 
-CC=gcc
-override CFLAGS +=-pedantic -Wall -Wextra -DROUNDS=100000000 -O0 -Wno-long-long
+CC ?= gcc
+override CFLAGS +=-pedantic -Wall -Wextra -O2
 
-program_NAME := jitterentropy-kernel-lfsrtime
+program_NAME := extractlsb
 #program_C_SRCS := $(wildcard *.c)
-program_C_SRCS := jitterentropy-lfsrtime.c
+program_C_SRCS := extractlsb.c
 program_C_OBJS := ${program_C_SRCS:.c=.o}
 program_OBJS := $(program_C_OBJS)
 

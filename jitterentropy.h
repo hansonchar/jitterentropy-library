@@ -222,8 +222,8 @@ struct rand_data
 	int rct_count;			/* Number of stuck values */
 
 	/* Adaptive Proportion Test for a significance level of 2^-30 */
-	unsigned int apt_cutoff;	/* Calculated using a corrected version
-					 * of the SP800-90B sec 4.4.2 formula */
+	unsigned int apt_cutoff;	/* Intermittent health test failure */
+	unsigned int apt_cutoff_permanent; /* Permanent health test failure */
 #define JENT_APT_WINDOW_SIZE	512	/* Data window size */
 	unsigned int apt_observations;	/* Number of collected observations in
 					 * current window. */
@@ -345,20 +345,6 @@ struct rand_data
 # define JENT_MIN_OSR	1
 #endif
 
-#define ARRAY_SIZE(x) (sizeof(x) / sizeof((x)[0]))
-
-/* -- BEGIN Main interface functions -- */
-
-#ifndef JENT_STUCK_INIT_THRES
-/*
- * Per default, not more than 90% of all measurements during initialization
- * are allowed to be stuck.
- *
- * It is allowed to change this value as required for the intended environment.
- */
-#define JENT_STUCK_INIT_THRES(x) ((x*9) / 10)
-#endif
-
 #ifdef JENT_PRIVATE_COMPILE
 # define JENT_PRIVATE_STATIC static
 #else /* JENT_PRIVATE_COMPILE */
@@ -453,6 +439,11 @@ static inline void jent_notime_fini(void *ctx) { (void)ctx; }
 #define JENT_RCT_FAILURE	1 /* Failure in RCT health test. */
 #define JENT_APT_FAILURE	2 /* Failure in APT health test. */
 #define JENT_LAG_FAILURE	4 /* Failure in Lag predictor health test. */
+#define JENT_PERMANENT_FAILURE_SHIFT	16
+#define JENT_PERMANENT_FAILURE(x)	(x << JENT_PERMANENT_FAILURE_SHIFT)
+#define JENT_RCT_FAILURE_PERMANENT	JENT_PERMANENT_FAILURE(JENT_RCT_FAILURE)
+#define JENT_APT_FAILURE_PERMANENT	JENT_PERMANENT_FAILURE(JENT_APT_FAILURE)
+#define JENT_LAG_FAILURE_PERMANENT	JENT_PERMANENT_FAILURE(JENT_LAG_FAILURE)
 /* -- END error masks for health tests -- */
 
 /* -- BEGIN statistical test functions only complied with CONFIG_CRYPTO_CPU_JITTERENTROPY_STAT -- */

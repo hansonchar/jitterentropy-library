@@ -1,11 +1,11 @@
 # Compile Noise Source as user space application
 
 CC ?= gcc
-override CFLAGS +=-pedantic -Wall -DCONFIG_CRYPTO_CPU_JITTERENTROPY_STAT -DROUNDS=10000000 -I../../ -O0 -Wno-long-long 
+override CFLAGS +=-pedantic -Wall -Wextra -DROUNDS=100000000 -O0 -Wno-long-long
 
-program_NAME := jitterentropy-foldtime
-#program_C_SRCS := $(wildcard *.c) 
-program_C_SRCS := jitterentropy-base.c jitterentropy-foldtime.c jitterentropy-stat.c
+program_NAME := jitterentropy-kernel-lfsrtime
+#program_C_SRCS := $(wildcard *.c)
+program_C_SRCS := jitterentropy-lfsrtime.c
 program_C_OBJS := ${program_C_SRCS:.c=.o}
 program_OBJS := $(program_C_OBJS)
 
